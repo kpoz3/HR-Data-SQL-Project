@@ -1,0 +1,37 @@
+SELECT * FROM `HR Project`.`employee.salary`;
+SELECT * FROM `HR Project`.`hr data set 1`;
+
+/* The business Objective is to discover the employee's average monthly income and the age for those who resigned. From here, I wll analyze the job role associated with the resignition and the job satisfaction. */ 
+
+SELECT Attrition , COUNT(Attrition)
+FROM `HR Project`.`employee.salary`                        
+GROUP BY Attrition 
+ORDER BY COUNT(Attrition)DESC ;
+
+/* There are 237 employees who have resigned */
+
+SELECT AVG(MonthlyIncome) , Attrition  
+FROM `HR Project`.`employee.salary` 
+WHERE Attrition = 'yes'
+GROUP BY Attrition ;
+
+/*The average monthly income for the employees who resigned is 4,787. */
+
+SELECT  AVG(`HR Project`.`hr data set 1`.Age) ,`HR Project`.`employee.salary`.Attrition, AVG(`HR Project`.`employee.salary`.MonthlyIncome)
+FROM `HR Project`.`hr data set 1`
+RIGHT JOIN `HR Project`.`employee.salary`
+ON `HR Project`.`hr data set 1`.EmployeeNumber  = `HR Project`.`employee.salary`.EmployeeNumber 
+WHERE `HR Project`.`employee.salary`.Attrition = 'yes'
+GROUP BY  `HR Project`.`employee.salary`.Attrition  ;
+
+/* The average age for those who resigned is 33 years old. */
+
+SELECT `HR Project`.`hr data set 1`.JobRole ,`HR Project`.`hr data set 1`.JobSatisfaction, `HR Project`.`employee.salary`.Attrition, AVG(`HR Project`.`employee.salary`.MonthlyIncome)
+FROM `HR Project`.`hr data set 1`
+LEFT JOIN `HR Project`.`employee.salary`
+ON `HR Project`.`hr data set 1`.EmployeeNumber  = `HR Project`.`employee.salary`.EmployeeNumber 
+WHERE `HR Project`.`employee.salary`.Attrition = 'yes'
+GROUP BY `HR Project`.`employee.salary`.Attrition,  `HR Project`.`hr data set 1`.JobRole,`HR Project`.`hr data set 1`.JobSatisfaction
+HAVING `HR Project`.`hr data set 1`.JobSatisfaction <3 ;
+
+/* By discovering the average monthly income and age for those who resigned, I have analyzed that there is far more employees who did not have a great job satisfaction within the job roles of sales representative and healthcare represenative. */
